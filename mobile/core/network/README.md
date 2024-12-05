@@ -18,7 +18,12 @@ The network module is responsible for:
 ## Usage
 
 To use the network module, you can obtain an instance of the `FeedApi` using the `feedApi` function:
+
 ```kotlin
-    // This returns a HttpResponse
-    feedApi().getFeed("g1")
+// This returns an HttpResponse
+feedApi().getFeed("g1")
 ```
+
+## Module Dependencies
+
+* `:core:model`

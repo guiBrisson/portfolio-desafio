@@ -17,6 +17,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
+
     // Ktor
     api(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
