@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "G1"
 include(":app")
-include(":core:network", ":core:model")
+include(":core:data", ":core:network", ":core:model")
