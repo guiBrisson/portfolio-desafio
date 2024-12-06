@@ -7,7 +7,16 @@ O objetivo é fornecer um histórico claro das minhas abordagens e raciocínios.
 
 ## Reflexões e Decisões
 
-### 1. Onde começar?
+### 1. App Modularizado
+
+Eu acredito que a criação de um aplicativo modularizado é impotante para garantir uma melhor
+organização e manutenibilidade do código. Essa abordagem permite que diferentes partes do aplicativo
+sejam desenvolvidas e testadas de forma independente, facilitando a identificação de problemas e a
+implementação de novas funcionalidades.
+Para facilitar o entendimento das minhas decisões, estou criando um arquivo `README.md` para cada
+módulo do projeto.
+
+### 2. Onde começar?
 
 Decidi iniciar o desenvolvimento do projeto pela primeira regra de negócio definida no `README`,
 visando estabelecer uma camada de dados antes de criar as interfaces. Essa abordagem gerou a
@@ -15,12 +24,6 @@ necessidade de outros módulos, como `:core:network` e `:core:model`. Considerei
 criação do design no Figma e a definição completa da arquitetura e bibliotecas, mas optei por adiar
 essas etapas para evitar overengineering e priorizar a simplicidade, buscando entender completamente
 os requisitos e dados disponíveis.
-
-### 2. Documentando módulos
-
-Para facilitar o entendimento das minhas decisões, estou criando um arquivo `README.md` para cada
-módulo do projeto. Além disso, essa abordagem ajudará a manter a organização do projeto e servirá
-como um guia útil para possíveis futuras manutenções e expansões.
 
 ### 3. Devo usar DI?
 
@@ -32,11 +35,17 @@ configuração da injeção de dependências pode não justificar seus benefíci
 dependência, que oferece vantagens como a atribuição de instâncias em ciclos de vida específicos,
 como o `ViewModel`, mas decidi que, neste caso, não era a melhor abordagem.
 
+### 4. Declaração de interface
+
+Optei por utilizar o Jetpack Compose para a criação da interface do usuário, pois é uma biblioteca
+mais atual e flexível, que permite a construção de componentes customizados de forma mais eficiente.
+Além disso, o Jetpack Compose oferece uma sintaxe declarativa que simplifica a gestão do estado da
+interface, promovendo uma melhor experiência de desenvolvimento e manutenção ao longo do ciclo de
+vida do projeto.
+
 ---
 
-## Melhorias ou ideias
+## Melhorias e/ou ideias
 
 1. Esconder informações sensíveis, como a base url.
-2. Desenvolver uma tela de onboarding que permita ao usuário selecionar seus temas favoritos,
-   possibilitando a criação de uma seção "For You", proporcionando uma experiência mais
-   personalizada.
+2. Módulo de design system (:core:design-system)

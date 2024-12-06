@@ -1,5 +1,6 @@
 package me.brisson.g1.core.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.brisson.g1.core.model.FeedItem
 
@@ -52,11 +53,24 @@ data class ItemContentResponse(
     @Serializable
     data class ItemContentImageResponse(
         val url: String,
+        val sizes: ItemContentImageSizesResponse,
     )
 
     @Serializable
+    data class ItemContentImageSizesResponse(
+        @SerialName("S") val s: ItemContentImageSizeResponse,
+    ) {
+        @Serializable
+        data class ItemContentImageSizeResponse(
+            val url: String,
+            val width: Int,
+            val height: Int,
+        )
+    }
+
+    @Serializable
     data class ItemContentChapeuResponse(
-        val label: String,
+        val label: String? = null,
     )
 }
 
@@ -66,7 +80,7 @@ fun List<FeedItemResponse>.filterMateriaAndBasicoType(): List<FeedItemResponse> 
 fun FeedItemResponse.asModel(): FeedItem = FeedItem(
     id = id,
     type = type,
-    imageUrl = content?.image?.url,
+    imageUrl = content?.image?.sizes?.s?.url,
     metadata = metadata,
     label = content?.chapeu?.label,
     title = content?.title,
