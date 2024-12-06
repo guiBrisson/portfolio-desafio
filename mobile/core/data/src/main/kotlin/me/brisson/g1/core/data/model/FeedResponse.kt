@@ -37,6 +37,7 @@ data class FeedItemResponse(
 data class AggregatedPostItemResponse(
     val type: String,
     val content: ItemContentResponse,
+    val id: Int,
 )
 
 @Serializable
@@ -83,9 +84,26 @@ fun FeedItemResponse.asModel(): FeedItem = FeedItem(
     imageUrl = content?.image?.sizes?.s?.url,
     metadata = metadata,
     label = content?.chapeu?.label,
+    section = content?.section,
     title = content?.title,
     summary = content?.summary,
     lastPublication = lastPublication,
     publication = publication,
     url = content?.url,
+    aggregatedPosts = aggregatedPosts?.map {
+        FeedItem(
+            id = it.id.toString(),
+            type = it.type,
+            imageUrl = it.content.image?.sizes?.s?.url,
+            metadata = null,
+            label = it.content.chapeu?.label,
+            section = it.content.section,
+            title = it.content.title,
+            summary = it.content.summary,
+            lastPublication = null,
+            publication = null,
+            url = it.content.url,
+            aggregatedPosts = null,
+        )
+    },
 )
