@@ -11,7 +11,7 @@ data class BaseFeedResponse(
 
 @Serializable
 data class FeedResponse(
-    val oferta: String,
+    val oferta: String? = null,
     val falkor: FalkorResponse
 )
 
@@ -59,7 +59,7 @@ data class ItemContentResponse(
 
     @Serializable
     data class ItemContentImageSizesResponse(
-        @SerialName("S") val s: ItemContentImageSizeResponse,
+        @SerialName("S") val s: ItemContentImageSizeResponse? = null,
     ) {
         @Serializable
         data class ItemContentImageSizeResponse(

@@ -12,15 +12,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import me.brisson.g1.core.data.repository.FeedRepository
-import me.brisson.g1.core.model.Feed
 
 class FeedViewModel(
     private val feedRepository: FeedRepository,
-): ViewModel() {
+) : ViewModel() {
     private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
     val uiState: StateFlow<FeedUiState> = _uiState.asStateFlow()
 
-    fun fetchFeed() {
+    fun handleUiEvent(event: FeedUiEvent) {
+        when (event) {
+            FeedUiEvent.FetchFeed -> fetchFeed()
+            FeedUiEvent.LoadNextPage -> loadNextPage()
+        }
+    }
+
+    private fun fetchFeed() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val g1Feed = feedRepository.getFeed("g1")
@@ -28,6 +34,24 @@ class FeedViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.value = FeedUiState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    private fun loadNextPage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                when (val uiState = _uiState.value) {
+                    is FeedUiState.Success -> {
+                        val feed = feedRepository.getFeedPage(uiState.feed.pagination)
+                        val newFeedItems = uiState.feed.items + feed.items
+                        _uiState.value = FeedUiState.Success(feed.copy(items = newFeedItems))
+                    }
+
+                    else -> Unit
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -41,10 +65,4 @@ class FeedViewModel(
             }
         }
     }
-}
-
-sealed interface FeedUiState {
-    data object Loading : FeedUiState
-    data class Success(val feed: Feed) : FeedUiState
-    data class Error(val message: String) : FeedUiState
 }

@@ -2,7 +2,6 @@ package me.brisson.g1.core.data.repository
 
 import io.ktor.client.call.body
 import me.brisson.g1.core.data.model.BaseFeedResponse
-import me.brisson.g1.core.data.model.FeedResponse
 import me.brisson.g1.core.data.model.asModel
 import me.brisson.g1.core.data.model.filterMateriaAndBasicoType
 import me.brisson.g1.core.model.Feed
@@ -25,7 +24,7 @@ fun feedRepository(api: FeedApi = feedApi()) = object : FeedRepository {
             .map { it.asModel() }
 
         val pagination = FeedPagination(
-            oferta = response.feed.oferta,
+            oferta = response.feed.oferta ?: "", //TODO: handle null
             product = productOrUri, //TODO: does it work if it is a uri?
             nextPage = response.feed.falkor.nextPage,
         )
@@ -37,12 +36,12 @@ fun feedRepository(api: FeedApi = feedApi()) = object : FeedRepository {
     }
 
     override suspend fun getFeedPage(feedPagination: FeedPagination): Feed {
-        val response: FeedResponse = api.getFeedPage(feedPagination).body<FeedResponse>()
-        val feedItems: List<FeedItem> = response.falkor.items.map { it.asModel() }
+        val response: BaseFeedResponse = api.getFeedPage(feedPagination).body<BaseFeedResponse>()
+        val feedItems: List<FeedItem> = response.feed.falkor.items.map { it.asModel() }
 
         return Feed(
             items = feedItems,
-            pagination = feedPagination.copy(nextPage = response.falkor.nextPage),
+            pagination = feedPagination.copy(nextPage = response.feed.falkor.nextPage),
         )
     }
 }
