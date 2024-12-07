@@ -13,9 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import me.brisson.g1.core.model.FeedItem
@@ -28,12 +26,16 @@ fun FeedItemComponent(
 ) {
     Column(modifier = modifier then Modifier) {
         feedItem.label?.let { label ->
-            Text(text = label, style = MaterialTheme.typography.labelLarge)
+            Text(
+                modifier = Modifier.padding(bottom = 8.dp),
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+            )
         }
 
         feedItem.title?.let { title ->
             Text(
-                modifier = Modifier.padding(bottom = 4.dp, top = 8.dp),
+                modifier = Modifier.padding(bottom = 4.dp),
                 text = title,
                 style = MaterialTheme.typography.headlineMedium,
             )
@@ -50,7 +52,7 @@ fun FeedItemComponent(
         feedItem.imageUrl?.let { imageUrl ->
             AsyncImage(
                 modifier = Modifier
-                    .padding(top = 4.dp, bottom = 8.dp)
+                    .padding(top = 4.dp)
                     .fillMaxWidth(),
                 model = imageUrl,
                 contentDescription = null,
@@ -60,12 +62,9 @@ fun FeedItemComponent(
 
         feedItem.metadata?.let { metadata ->
             Text(
-                modifier = Modifier
-                    .padding()
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(top = 8.dp),
                 text = metadata,
                 style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Right,
             )
         }
 
@@ -80,8 +79,8 @@ fun FeedItemComponent(
             modifier = Modifier
                 .padding(top = 24.dp)
                 .fillMaxWidth()
-                .height(1.2.dp)
-                .background(MaterialTheme.colorScheme.onBackground),
+                .height(0.5.dp)
+                .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
         )
     }
 }
@@ -104,7 +103,7 @@ private fun FeedItemAggregatedPostsComponent(
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .size(6.dp)
-                        .background(Color.Red)
+                        .background(MaterialTheme.colorScheme.primary)
                 )
 
                 Text(

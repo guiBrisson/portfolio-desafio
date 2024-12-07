@@ -48,4 +48,4 @@ vida do projeto.
 ## Melhorias e/ou ideias
 
 1. Esconder informações sensíveis, como a base url.
-2. Módulo de design system (:core:design-system)
+2. Módulo de design system (:core:design-system) para o `MaterialTheme` e os componentes.
