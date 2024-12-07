@@ -1,11 +1,15 @@
 package me.brisson.g1.screen.feed
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -29,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import me.brisson.g1.core.data.repository.FeedRepository
 import me.brisson.g1.ui.components.FeedItemComponent
 import me.brisson.g1.ui.components.G1AppBar
+import me.brisson.g1.ui.components.ShimmerBox
 import me.brisson.g1.ui.theme.G1Theme
 import me.brisson.g1.ui.utils.isAtBottom
 
@@ -98,9 +103,9 @@ internal fun FeedScreen(
             }
 
             when (uiState) {
-                FeedUiState.Loading -> LinearProgressIndicator(
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                FeedUiState.Loading -> {
+                    repeat(3) { LoadingFeedItem() }
+                }
 
                 is FeedUiState.Error -> Text(
                     text = uiState.message,
@@ -135,6 +140,54 @@ internal fun FeedScreen(
         }
     }
 }
+
+@Composable
+fun LoadingFeedItem() {
+    // Represents label
+    ShimmerBox(
+        modifier = Modifier
+            .padding(top = 12.dp, bottom = 8.dp)
+            .padding(horizontal = 16.dp)
+            .size(width = 120.dp, height = 20.dp),
+    )
+
+    // Represents title
+    ShimmerBox(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .padding(bottom = 4.dp)
+            .padding(horizontal = 16.dp),
+    )
+
+    // Represents image
+    ShimmerBox(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(240.dp)
+            .padding(top = 4.dp)
+            .padding(horizontal = 16.dp),
+    )
+
+    // Represents metadata
+    ShimmerBox(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .padding(horizontal = 16.dp)
+            .size(width = 200.dp, height = 20.dp),
+    )
+
+    // Represents Divider
+    Box(
+        modifier = Modifier
+            .padding(vertical = 24.dp)
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+            .height(0.5.dp)
+            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
+    )
+}
+
 
 @Preview(showSystemUi = true)
 @Composable

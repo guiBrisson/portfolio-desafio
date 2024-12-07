@@ -57,4 +57,5 @@ demandaria muito tempo e resultaria em um código com menos dependências.
 
 1. Esconder informações sensíveis, como a base url.
 2. Módulo de design system (`:core:design-system`) para o `MaterialTheme` e os componentes.
-3. Manter o estado (ou pelo menos a atual `url`) da webview em caso de alguma recomposição da tela.
+3. Uma paginação do feed mais suave. 
+4. Manter o estado (ou pelo menos a atual `url`) da webview em caso de alguma recomposição da tela.
