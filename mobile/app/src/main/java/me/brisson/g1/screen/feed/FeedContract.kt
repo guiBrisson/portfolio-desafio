@@ -9,6 +9,7 @@ sealed interface FeedUiState {
 }
 
 sealed interface FeedUiEvent {
+    data object Refresh : FeedUiEvent
     data object FetchFeed : FeedUiEvent
     data object LoadNextPage : FeedUiEvent
 }

@@ -7,9 +7,11 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.brisson.g1.core.data.repository.FeedRepository
 
@@ -19,14 +21,27 @@ class FeedViewModel(
     private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
     val uiState: StateFlow<FeedUiState> = _uiState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     fun handleUiEvent(event: FeedUiEvent) {
         when (event) {
-            FeedUiEvent.FetchFeed -> fetchFeed()
-            FeedUiEvent.LoadNextPage -> loadNextPage()
+            FeedUiEvent.Refresh -> refresh()
+            FeedUiEvent.FetchFeed -> loadFeed()
+            FeedUiEvent.LoadNextPage -> loadFeedNextPage()
         }
     }
 
-    private fun fetchFeed() {
+    private fun refresh() {
+        _isRefreshing.value = true
+        loadFeed()
+        viewModelScope.launch {
+            delay(200) // delay is needed for the animation to finish gracefully
+            _isRefreshing.value = false
+        }
+    }
+
+    private fun loadFeed() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val g1Feed = feedRepository.getFeed("g1")
@@ -38,7 +53,7 @@ class FeedViewModel(
         }
     }
 
-    private fun loadNextPage() {
+    private fun loadFeedNextPage() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 when (val uiState = _uiState.value) {
