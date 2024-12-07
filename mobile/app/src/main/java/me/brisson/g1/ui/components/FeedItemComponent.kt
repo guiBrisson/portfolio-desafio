@@ -1,6 +1,8 @@
 package me.brisson.g1.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,19 +14,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import me.brisson.g1.R
 import me.brisson.g1.core.model.FeedItem
-
 
 @Composable
 fun FeedItemComponent(
     modifier: Modifier = Modifier,
     feedItem: FeedItem,
+    onFeedItem: (FeedItem) -> Unit,
 ) {
-    Column(modifier = modifier then Modifier) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Column(
+        modifier = modifier then Modifier.clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = { onFeedItem(feedItem) },
+        ),
+    ) {
         feedItem.label?.let { label ->
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),
@@ -36,7 +49,7 @@ fun FeedItemComponent(
         feedItem.title?.let { title ->
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
-                text = title,
+                text = title.trimIndent(),
                 style = MaterialTheme.typography.headlineMedium,
             )
         }
@@ -55,7 +68,7 @@ fun FeedItemComponent(
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
                 model = imageUrl,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.feed_item_image),
                 contentScale = ContentScale.FillWidth,
             )
         }
@@ -72,6 +85,7 @@ fun FeedItemComponent(
             FeedItemAggregatedPostsComponent(
                 modifier = Modifier.fillMaxWidth(),
                 aggregatedPosts = aggregatedPosts,
+                onFeedItem = onFeedItem,
             )
         }
 
@@ -89,14 +103,23 @@ fun FeedItemComponent(
 private fun FeedItemAggregatedPostsComponent(
     modifier: Modifier = Modifier,
     aggregatedPosts: List<FeedItem>,
+    onFeedItem: (FeedItem) -> Unit,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     aggregatedPosts.forEach { aggregatedItem ->
         aggregatedItem.title?.let { title ->
             Row(
-                modifier = modifier then Modifier.padding(
-                    start = 12.dp,
-                    top = 16.dp,
-                ),
+                modifier = modifier then Modifier
+                    .padding(
+                        start = 12.dp,
+                        top = 16.dp,
+                    )
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                        onClick = { onFeedItem(aggregatedItem) },
+                    ),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Box(

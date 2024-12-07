@@ -19,10 +19,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,10 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import me.brisson.g1.core.data.repository.FeedRepository
 import me.brisson.g1.ui.components.FeedItemComponent
+import me.brisson.g1.ui.components.G1AppBar
 import me.brisson.g1.ui.theme.G1Theme
 import me.brisson.g1.ui.utils.isAtBottom
 
@@ -41,6 +36,7 @@ import me.brisson.g1.ui.utils.isAtBottom
 fun FeedRouter(
     modifier: Modifier = Modifier,
     feedRepository: FeedRepository,
+    onFeedItem: (url: String) -> Unit,
 ) {
     val viewModel: FeedViewModel = viewModel<FeedViewModel>(
         factory = FeedViewModel.Factory,
@@ -53,13 +49,17 @@ fun FeedRouter(
 
     LaunchedEffect(Unit) { viewModel.handleUiEvent(FeedUiEvent.FetchFeed) }
 
-    FeedScreen(
-        modifier = modifier,
-        uiState = uiState,
-        isRefreshing = isRefreshing,
-        onLoadNextPage = { viewModel.handleUiEvent(FeedUiEvent.LoadNextPage) },
-        onRefresh = { viewModel.handleUiEvent(FeedUiEvent.Refresh) },
-    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        G1AppBar()
+        FeedScreen(
+            modifier = modifier,
+            uiState = uiState,
+            isRefreshing = isRefreshing,
+            onLoadNextPage = { viewModel.handleUiEvent(FeedUiEvent.LoadNextPage) },
+            onRefresh = { viewModel.handleUiEvent(FeedUiEvent.Refresh) },
+            onFeedItem = onFeedItem,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,6 +70,7 @@ internal fun FeedScreen(
     isRefreshing: Boolean,
     onLoadNextPage: () -> Unit,
     onRefresh: () -> Unit,
+    onFeedItem: (url: String) -> Unit,
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -123,6 +124,9 @@ internal fun FeedScreen(
                             FeedItemComponent(
                                 modifier = Modifier.fillMaxSize(),
                                 feedItem = item,
+                                onFeedItem = { clickedItem ->
+                                    clickedItem.url?.let { onFeedItem(it) }
+                                },
                             )
                         }
                     }
@@ -144,6 +148,7 @@ private fun PreviewFeedScreen() {
             isRefreshing = false,
             onLoadNextPage = { },
             onRefresh = { },
+            onFeedItem = { },
         )
     }
 }

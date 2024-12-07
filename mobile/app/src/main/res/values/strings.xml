@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">g1</string>
+    <string name="ic_g1_logo_description">Ícone do logo do aplicativo g1</string>
+    <string name="feed_item_image">Imagem da matéria</string>
 </resources>

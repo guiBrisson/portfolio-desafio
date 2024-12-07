@@ -43,9 +43,18 @@ Além disso, o Jetpack Compose oferece uma sintaxe declarativa que simplifica a 
 interface, promovendo uma melhor experiência de desenvolvimento e manutenção ao longo do ciclo de
 vida do projeto.
 
+### 5. Webview
+
+Como esta é a minha primeira experiência implementando uma webview, inicialmente considerei utilizar
+uma biblioteca, facilitando o controle do estado da tela e gerenciando aspectos como a navegação ao
+pressionar o botão 'voltar'. No entanto, após analisar o código-fonte de algumas dessas bibliotecas,
+optei por desenvolver uma implementação própria. Concluí que o que eu desejava realizar não
+demandaria muito tempo e resultaria em um código com menos dependências.
+
 ---
 
 ## Melhorias e/ou ideias
 
 1. Esconder informações sensíveis, como a base url.
-2. Módulo de design system (:core:design-system) para o `MaterialTheme` e os componentes.
+2. Módulo de design system (`:core:design-system`) para o `MaterialTheme` e os componentes.
+3. Manter o estado (ou pelo menos a atual `url`) da webview em caso de alguma recomposição da tela.
