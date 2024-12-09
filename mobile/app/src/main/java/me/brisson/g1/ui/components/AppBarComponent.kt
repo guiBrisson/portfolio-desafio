@@ -6,31 +6,55 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import me.brisson.g1.R
+import me.brisson.g1.screen.feed.FeedTab
 import me.brisson.g1.ui.theme.G1Theme
+import me.brisson.g1.ui.theme.interFontFamily
 
 @Composable
-fun G1AppBar(modifier: Modifier = Modifier) {
-    AppBarComponent(modifier = modifier) {
-        Icon(
-            modifier = Modifier.size(28.dp),
-            painter = painterResource(R.drawable.ic_g1),
-            contentDescription = stringResource(R.string.ic_g1_logo_description),
-            tint = MaterialTheme.colorScheme.onPrimary,
+fun FeedAppBar(
+    modifier: Modifier = Modifier,
+    tab: FeedTab,
+    onMenu: () -> Unit,
+) {
+    AppBarComponent(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Start,
+    ) {
+        IconButton(onClick = onMenu) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary,
+            )
+        }
+
+        val tabName: String = when (tab) {
+            FeedTab.AGRO_TAB -> "Agro"
+            FeedTab.G1_TAB -> "g1"
+        }
+
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = tabName,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontFamily = interFontFamily,
+            fontWeight = FontWeight.SemiBold,
         )
     }
 }
@@ -75,18 +99,21 @@ fun AppBarComponent(
 
 @Preview
 @Composable
-private fun PreviewG1AppBar() {
+private fun PreviewWebAppBar() {
     G1Theme {
-        G1AppBar()
+        WebAppBar(
+            onBack = { },
+        )
     }
 }
 
 @Preview
 @Composable
-private fun PreviewWebAppBar() {
+private fun PreviewG1AppBar() {
     G1Theme {
-        WebAppBar(
-            onBack = { },
+        FeedAppBar(
+            tab = FeedTab.AGRO_TAB,
+            onMenu = { },
         )
     }
 }

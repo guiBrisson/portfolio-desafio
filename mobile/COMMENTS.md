@@ -57,5 +57,11 @@ demandaria muito tempo e resultaria em um código com menos dependências.
 
 1. Esconder informações sensíveis, como a base url.
 2. Módulo de design system (`:core:design-system`) para o `MaterialTheme` e os componentes.
-3. Uma paginação do feed mais suave. 
+3. Uma paginação do feed mais suave.
 4. Manter o estado (ou pelo menos a atual `url`) da webview em caso de alguma recomposição da tela.
+
+## Sugestão de melhoria do desafio
+
+1. A documentação referente à paginação está incorreta ou incompleta. A `URL` de paginação para URI
+   é: https://native-leon.globo.com/feed/page/{tenant}/{offer}/{page}.
+2. No arquivo `menu.json`, a maioria dos campos URL não está com o protocolo `HTTPS`, e sim `HTTP`.

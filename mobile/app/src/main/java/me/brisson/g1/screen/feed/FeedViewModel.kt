@@ -11,9 +11,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.brisson.g1.core.data.repository.FeedRepository
+import me.brisson.g1.screen.feed.FeedUiEvent.*
 
 class FeedViewModel(
     private val feedRepository: FeedRepository,
@@ -21,30 +21,35 @@ class FeedViewModel(
     private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
     val uiState: StateFlow<FeedUiState> = _uiState.asStateFlow()
 
+    private val _tabSelected: MutableStateFlow<FeedTab> = MutableStateFlow(FeedTab.G1_TAB)
+    val tabSelected: StateFlow<FeedTab> = _tabSelected.asStateFlow()
+
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     fun handleUiEvent(event: FeedUiEvent) {
         when (event) {
-            FeedUiEvent.Refresh -> refresh()
-            FeedUiEvent.FetchFeed -> loadFeed()
-            FeedUiEvent.LoadNextPage -> loadFeedNextPage()
+            Refresh -> refresh()
+            FetchFeed -> loadFeed(_tabSelected.value.productOrUri)
+            LoadNextPage -> loadFeedNextPage()
+            is SelectTab -> selectTag(event.tab)
         }
     }
 
     private fun refresh() {
         _isRefreshing.value = true
-        loadFeed()
+        loadFeed(_tabSelected.value.productOrUri)
         viewModelScope.launch {
             delay(200) // delay is needed for the animation to finish gracefully
             _isRefreshing.value = false
         }
     }
 
-    private fun loadFeed() {
+    private fun loadFeed(productOrUri: String) {
+        _uiState.value = FeedUiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val g1Feed = feedRepository.getFeed("g1")
+                val g1Feed = feedRepository.getFeed(productOrUri)
                 _uiState.value = FeedUiState.Success(g1Feed)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -69,6 +74,14 @@ class FeedViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun selectTag(tab: FeedTab) {
+        // Nothing should happen if the user select the already selected tab
+        if (tab == _tabSelected.value) return
+
+        _tabSelected.value = tab
+        loadFeed(_tabSelected.value.productOrUri)
     }
 
     companion object {

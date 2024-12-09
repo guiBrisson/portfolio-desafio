@@ -23,9 +23,10 @@ fun feedRepository(api: FeedApi = feedApi()) = object : FeedRepository {
             .filterMateriaAndBasicoType()
             .map { it.asModel() }
 
+        //TODO: handle null
         val pagination = FeedPagination(
-            oferta = response.feed.oferta ?: "", //TODO: handle null
-            product = productOrUri, //TODO: does it work if it is a uri?
+            oferta = response.feed.oferta ?: "",
+            tenantId = response.resource?.tenantId ?: "",
             nextPage = response.feed.falkor.nextPage,
         )
 

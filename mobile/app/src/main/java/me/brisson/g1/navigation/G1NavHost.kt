@@ -28,7 +28,7 @@ fun G1NavHost(
             FeedRouter(
                 modifier = modifier,
                 feedRepository = dependencies.feedRepository,
-                onFeedItem = { url ->
+                onLoadWebUrl = { url ->
                     navController.navigate(WebRoute(url))
                 }
             )

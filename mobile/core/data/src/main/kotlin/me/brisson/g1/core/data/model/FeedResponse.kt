@@ -7,6 +7,12 @@ import me.brisson.g1.core.model.FeedItem
 @Serializable
 data class BaseFeedResponse(
     val feed: FeedResponse,
+    val resource: ResourceResponse? = null,
+)
+
+@Serializable
+data class ResourceResponse(
+    val tenantId: String,
 )
 
 @Serializable

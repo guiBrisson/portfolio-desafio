@@ -22,6 +22,6 @@ data class FeedItem(
 
 data class FeedPagination(
     val oferta: String,
-    val product: String,
+    val tenantId: String,
     val nextPage: Int,
 )

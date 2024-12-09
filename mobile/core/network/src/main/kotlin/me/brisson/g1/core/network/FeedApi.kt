@@ -16,5 +16,5 @@ fun feedApi(client: HttpClient = httpAndroidClient): FeedApi = object : FeedApi 
     override suspend fun getFeed(productOrUri: String) = client.get(ENDPOINT + productOrUri)
 
     override suspend fun getFeedPage(feedPagination: FeedPagination): HttpResponse =
-        client.get(ENDPOINT + "page/" + feedPagination.product + "/" + feedPagination.oferta + "/" + feedPagination.nextPage)
+        client.get(ENDPOINT + "page/" + feedPagination.tenantId + "/" + feedPagination.oferta + "/" + feedPagination.nextPage)
 }
