@@ -18,9 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import me.brisson.g1.R
 import me.brisson.g1.screen.feed.FeedTab
 import me.brisson.g1.ui.theme.G1Theme
 import me.brisson.g1.ui.theme.interFontFamily
@@ -38,14 +40,14 @@ fun FeedAppBar(
         IconButton(onClick = onMenu) {
             Icon(
                 imageVector = Icons.Default.Menu,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.ic_menu_description),
                 tint = MaterialTheme.colorScheme.onPrimary,
             )
         }
 
         val tabName: String = when (tab) {
-            FeedTab.AGRO_TAB -> "Agro"
-            FeedTab.G1_TAB -> "g1"
+            FeedTab.G1_TAB -> stringResource(R.string.g1_tab_title)
+            FeedTab.AGRO_TAB -> stringResource(R.string.agro_tab_title)
         }
 
         Text(
@@ -71,7 +73,7 @@ fun WebAppBar(
         IconButton(onClick = onBack) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.ic_arrow_back_description),
                 tint = MaterialTheme.colorScheme.onPrimary,
             )
         }

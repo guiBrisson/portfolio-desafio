@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -28,13 +27,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import me.brisson.g1.R
 import me.brisson.g1.core.data.repository.FeedRepository
+import me.brisson.g1.ui.components.ErrorComponent
 import me.brisson.g1.ui.components.FeedAppBar
 import me.brisson.g1.ui.components.FeedDrawer
 import me.brisson.g1.ui.components.FeedItemComponent
@@ -138,8 +140,10 @@ internal fun FeedScreen(
                     repeat(3) { LoadingFeedItem() }
                 }
 
-                is FeedUiState.Error -> Text(
-                    text = uiState.message,
+                is FeedUiState.Error -> ErrorComponent(
+                    modifier = Modifier.padding(16.dp),
+                    title = stringResource(R.string.error_while_fetching_feed_data),
+                    error = uiState.message,
                 )
 
                 is FeedUiState.Success -> {
@@ -222,8 +226,24 @@ fun LoadingFeedItem() {
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewFeedScreen() {
+private fun PreviewFeedScreenLoading() {
     val uiState = FeedUiState.Loading
+
+    G1Theme {
+        FeedScreen(
+            modifier = Modifier.fillMaxSize(),
+            uiState = uiState,
+            isRefreshing = false,
+            onLoadNextPage = { },
+            onRefresh = { },
+            onFeedItem = { },
+        )
+    }
+}
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFeedScreenError() {
+    val uiState = FeedUiState.Error(stringResource(R.string.preview_error_component_message))
 
     G1Theme {
         FeedScreen(

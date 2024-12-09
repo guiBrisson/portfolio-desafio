@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">g1</string>
-    <string name="ic_g1_logo_description">Ícone do logo do aplicativo g1</string>
     <string name="feed_item_image">Imagem da matéria</string>
+    <string name="error_while_fetching_feed_data">Ocorreu um erro ao carregar o feed</string>
+    <string name="g1_tab_title">g1</string>
+    <string name="agro_tab_title">Agro</string>
+    <string name="menu_tab_title">Menu</string>
+
+    <!--  Content descriptions  -->
+    <string name="ic_g1_logo_description">Ícone do logo do aplicativo g1</string>
+    <string name="ic_menu_description">Ícone do menu</string>
+    <string name="ic_arrow_back_description">Ícone da seta de voltar</string>
+
+    <!--  String for component preview  -->
+    <string name="preview_error_component_message">{"error":{"code":404,"message":"Not Found","description":"The requested resource could not be found. Please check the endpoint URL and try again.","timestamp":"2023–10–05T14:48:00Z","requestId":"abc123xyz"}}</string>
 </resources>

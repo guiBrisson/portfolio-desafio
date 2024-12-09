@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import me.brisson.g1.R
 import me.brisson.g1.screen.feed.FeedTab
 import me.brisson.g1.ui.theme.interFontFamily
 
@@ -37,20 +39,20 @@ fun FeedDrawer(
                 Spacer(modifier = Modifier.padding(top = 16.dp))
 
                 FeedNavigationDrawerItem(
-                    labelText = "g1",
+                    labelText = stringResource(R.string.g1_tab_title),
                     selected = selectedTab == FeedTab.G1_TAB,
                     onClick = { onSelectTab(FeedTab.G1_TAB) },
                 )
 
                 FeedNavigationDrawerItem(
-                    labelText = "Agro",
+                    labelText = stringResource(R.string.agro_tab_title),
                     selected = selectedTab == FeedTab.AGRO_TAB,
                     onClick = { onSelectTab(FeedTab.AGRO_TAB) },
                 )
 
                 Text(
                     modifier = Modifier.padding(16.dp).padding(top = 16.dp),
-                    text = "Menu",
+                    text = stringResource(R.string.menu_tab_title),
                     fontFamily = interFontFamily,
                 )
 
