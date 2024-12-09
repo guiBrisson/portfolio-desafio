@@ -68,9 +68,6 @@ fun FeedRouter(
         }
     }
 
-    // Fetches the initial feed data
-    LaunchedEffect(Unit) { viewModel.handleUiEvent(FeedUiEvent.FetchFeed) }
-
     // If drawer is open, closes it when back is pressed
     BackHandler(drawerState.isOpen) {
         scope.launch { drawerState.close() }

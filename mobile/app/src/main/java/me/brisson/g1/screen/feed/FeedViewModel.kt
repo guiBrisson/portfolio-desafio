@@ -9,8 +9,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.brisson.g1.core.data.repository.FeedRepository
 import me.brisson.g1.screen.feed.FeedUiEvent.*
@@ -18,14 +21,16 @@ import me.brisson.g1.screen.feed.FeedUiEvent.*
 class FeedViewModel(
     private val feedRepository: FeedRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
-    val uiState: StateFlow<FeedUiState> = _uiState.asStateFlow()
-
     private val _tabSelected: MutableStateFlow<FeedTab> = MutableStateFlow(FeedTab.G1_TAB)
     val tabSelected: StateFlow<FeedTab> = _tabSelected.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
+    val uiState: StateFlow<FeedUiState> = _uiState
+        .onStart { loadFeed(_tabSelected.value.productOrUri) } // Fetches the initial feed data
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FeedUiState.Loading)
 
     fun handleUiEvent(event: FeedUiEvent) {
         when (event) {

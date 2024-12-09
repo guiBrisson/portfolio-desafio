@@ -3,6 +3,8 @@
 Este documento registra minhas reflexões, ideias e decisões tomadas durante o desenvolvimento.
 O objetivo é fornecer um histórico claro das minhas abordagens e raciocínios.
 
+*obs.: Os commits também contém informações/comentários do que está sendo implementado.*
+
 ---
 
 ## Reflexões e Decisões
