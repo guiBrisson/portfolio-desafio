@@ -53,6 +53,15 @@ pressionar o botão 'voltar'. No entanto, após analisar o código-fonte de algu
 optei por desenvolver uma implementação própria. Concluí que o que eu desejava realizar não
 demandaria muito tempo e resultaria em um código com menos dependências.
 
+### 6. Erro como valor
+
+Eu sempre dou preferência a tratar erros como valor, em vez de usar `exceptions` ou `throwables`.
+Nesse projeto, decidi criar uma classe para lidar com os erros, chamada de `Result`.
+O `Result` pode conter o valor ou o erro, sendo este uma interface selada que representa a base para
+todos os erros do projeto. Para ser bem sincero, não estou 100% contente com o resultado dessa
+abordagem, e talvez haja uma escolha melhor, como a biblioteca [Arrow](https://arrow-kt.io/). Porém,
+para um projeto pequeno, acredito que é o suficiente.
+
 ---
 
 ## Melhorias e/ou ideias
@@ -61,6 +70,8 @@ demandaria muito tempo e resultaria em um código com menos dependências.
 2. Módulo de design system (`:core:design-system`) para o `MaterialTheme` e os componentes.
 3. Uma paginação do feed mais suave.
 4. Manter o estado (ou pelo menos a atual `url`) da webview em caso de alguma recomposição da tela.
+5. Implementação da biblioteca [Arrow](https://arrow-kt.io/) para realizar o tratamento dos erros no
+   projeto.
 
 ## Sugestão de melhoria do desafio
 

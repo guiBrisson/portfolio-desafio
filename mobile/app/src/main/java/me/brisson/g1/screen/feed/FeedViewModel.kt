@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.brisson.g1.core.data.repository.FeedRepository
+import me.brisson.g1.core.model.DataError
+import me.brisson.g1.core.model.onFailure
+import me.brisson.g1.core.model.onSuccess
 import me.brisson.g1.screen.feed.FeedUiEvent.*
 
 class FeedViewModel(
@@ -29,7 +32,7 @@ class FeedViewModel(
 
     private val _uiState = MutableStateFlow<FeedUiState>(FeedUiState.Loading)
     val uiState: StateFlow<FeedUiState> = _uiState
-        .onStart { loadFeed(_tabSelected.value.productOrUri) } // Fetches the initial feed data
+        .onStart { loadFeed(_tabSelected.value.productOrUri) } // Loads the initial feed data
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FeedUiState.Loading)
 
     fun handleUiEvent(event: FeedUiEvent) {
@@ -37,7 +40,7 @@ class FeedViewModel(
             Refresh -> refresh()
             FetchFeed -> loadFeed(_tabSelected.value.productOrUri)
             LoadNextPage -> loadFeedNextPage()
-            is SelectTab -> selectTag(event.tab)
+            is SelectTab -> selectTab(event.tab)
         }
     }
 
@@ -53,40 +56,46 @@ class FeedViewModel(
     private fun loadFeed(productOrUri: String) {
         _uiState.value = FeedUiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val g1Feed = feedRepository.getFeed(productOrUri)
-                _uiState.value = FeedUiState.Success(g1Feed)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _uiState.value = FeedUiState.Error(e.message ?: "Unknown error")
-            }
+            feedRepository.getFeed(productOrUri)
+                .onSuccess { feed -> _uiState.value = FeedUiState.Success(feed) }
+                .onFailure { dataError ->
+                    _uiState.value = FeedUiState.Error(mapDataErrorToString(dataError))
+                }
         }
     }
 
     private fun loadFeedNextPage() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                when (val uiState = _uiState.value) {
-                    is FeedUiState.Success -> {
-                        val feed = feedRepository.getFeedPage(uiState.feed.pagination)
-                        val newFeedItems = uiState.feed.items + feed.items
-                        _uiState.value = FeedUiState.Success(feed.copy(items = newFeedItems))
-                    }
 
-                    else -> Unit
+            // Should only load the next feed page if is a successful current state
+            when (val state = _uiState.value) {
+                is FeedUiState.Success -> {
+                    feedRepository.getFeedPage(state.feed.pagination)
+                        .onSuccess { feed ->
+                            val newFeedItems = state.feed.items + feed.items
+                            _uiState.value = FeedUiState.Success(feed.copy(items = newFeedItems))
+                        }
+                        .onFailure { dataError ->
+                            _uiState.value = FeedUiState.Error(mapDataErrorToString(dataError))
+                        }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+
+                else -> Unit
             }
         }
     }
 
-    private fun selectTag(tab: FeedTab) {
+    private fun selectTab(tab: FeedTab) {
         // Nothing should happen if the user select the already selected tab
         if (tab == _tabSelected.value) return
 
         _tabSelected.value = tab
         loadFeed(_tabSelected.value.productOrUri)
+    }
+
+    private fun mapDataErrorToString(error: DataError): String = when (error) {
+        is DataError.Network -> "There was a problem loading the data from the API"
+        else -> "There was some problem with data validation"
     }
 
     companion object {
