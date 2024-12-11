@@ -36,4 +36,9 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.androidx.core.ktx)
+
+    // Tests
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.coroutines.test)
 }

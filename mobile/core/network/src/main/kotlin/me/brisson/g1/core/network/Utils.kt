@@ -1,8 +1,6 @@
 package me.brisson.g1.core.network
 
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.statement.HttpResponse
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
@@ -30,11 +28,14 @@ inline fun HttpClient.safeRequest(
     block: HttpClient.() -> HttpResponse,
 ): Result<HttpResponse, NetworkError> {
     return try {
-        return Result.Success(block())
-    } catch (e: ClientRequestException) {
-        Result.Failure(NetworkError.ClientRequestError(e.response.status.value, e.message))
-    } catch (e: ServerResponseException) {
-        Result.Failure(NetworkError.ServerResponseError(e.response.status.value, e.message))
+        val response = block()
+
+        return when (val code = response.status.value) {
+            in 400..499 -> Result.Failure(NetworkError.ClientRequestError(code))
+            in 500..599 -> Result.Failure(NetworkError.ServerResponseError(code))
+            else -> Result.Success(response)
+        }
+
     } catch (e: IOException) {
         Result.Failure(NetworkError.IOError(e.message))
     } catch (e: SerializationException) {

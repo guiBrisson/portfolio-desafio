@@ -4,8 +4,8 @@ package me.brisson.g1.core.model
 sealed interface Error
 
 sealed interface NetworkError: Error {
-    data class ClientRequestError(val code: Int, val message: String) : NetworkError
-    data class ServerResponseError(val code: Int, val message: String) : NetworkError
+    data class ClientRequestError(val code: Int, val message: String = "") : NetworkError
+    data class ServerResponseError(val code: Int, val message: String = "") : NetworkError
     data class IOError(val message: String?) : NetworkError
     data class SerializationError(val message: String?) : NetworkError
 }
